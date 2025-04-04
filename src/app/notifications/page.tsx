@@ -6,7 +6,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
-import { HeartIcon, MessageCircleIcon, UserPlusIcon } from "lucide-react";
+import { HeartIcon, MessageCircleIcon, MessageSquareIcon, UserPlusIcon } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -22,6 +22,8 @@ const getNotificationIcon = (type: string) => {
       return <MessageCircleIcon className="size-4 text-blue-500" />;
     case "FOLLOW":
       return <UserPlusIcon className="size-4 text-green-500" />;
+    case "MESSAGE":
+      return <MessageSquareIcon className="size-4 text-purple-500" />;
     default:
       return null;
   }
@@ -89,10 +91,13 @@ function NotificationsPage() {
                           ? "started following you"
                           : notification.type === "LIKE"
                           ? "liked your post"
-                          : "commented on your post"}
+                          : notification.type === "COMMENT"
+                          ? "commented on your post"
+                          : "sent you a message"}
                       </span>
                     </div>
 
+                    {/* Post content for likes and comments */}
                     {notification.post &&
                       (notification.type === "LIKE" || notification.type === "COMMENT") && (
                         <div className="pl-6 space-y-2">

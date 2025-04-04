@@ -161,7 +161,7 @@ function ProfilePageClient({
                       Edit Profile
                     </Button>
                   ) : currentUser ? (
-                    <>
+                    <div className="">
                       <Button
                         onClick={handleFollow}
                         variant={isFollowing ? "outline" : "default"}
@@ -173,12 +173,12 @@ function ProfilePageClient({
                       <Button
                         onClick={handleStartConversation}
                         variant="outline"
-                        className="w-full"
+                        className="w-full mt-2"
                       >
                         <MessageSquareIcon className="w-4 h-4 mr-2" />
                         Message
                       </Button>
-                    </>
+                    </div>
                   ) : (
                     <SignInButton mode="modal">
                       <Button className="w-full">

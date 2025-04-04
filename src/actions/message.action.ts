@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { NotificationType } from "@prisma/client";
 import { getDbUserId } from "./user.action";
 
 export type ConversationsResponse = {
@@ -105,17 +106,18 @@ export async function sendMessage(conversationId: string, content: string) {
     if (!currentUserId) throw new Error("Not authenticated");
 
     // Verify user is participant in conversation
-    const isParticipant = await prisma.conversationParticipant.findUnique({
-      where: {
-        userId_conversationId: {
-          userId: currentUserId,
-          conversationId,
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      include: {
+        participants: {
+          where: { userId: { not: currentUserId } },
+          select: { userId: true },
         },
       },
     });
 
-    if (!isParticipant) {
-      throw new Error("Not a participant in this conversation");
+    if (!conversation) {
+      throw new Error("Conversation not found");
     }
 
     const message = await prisma.message.create({
@@ -134,6 +136,16 @@ export async function sendMessage(conversationId: string, content: string) {
           },
         },
       },
+    });
+
+    // Create notifications for other participants
+    await prisma.notification.createMany({
+      data: conversation.participants.map((participant) => ({
+        userId: participant.userId,
+        creatorId: currentUserId,
+        type: NotificationType.MESSAGE,
+        messageId: message.id,
+      })),
     });
 
     // Update conversation's updatedAt
@@ -225,5 +237,40 @@ export async function getMessages(conversationId: string) {
   } catch (error) {
     console.error("Error fetching messages:", error);
     return { success: false, error: "Failed to fetch messages" };
+  }
+}
+
+export async function getUnreadMessagesCount() {
+  try {
+    const currentUserId = await getDbUserId();
+    if (!currentUserId) return 0;
+
+    // Get all conversations where the user is a participant
+    const userParticipations = await prisma.conversationParticipant.findMany({
+      where: { userId: currentUserId },
+      select: {
+        conversationId: true,
+        lastReadAt: true,
+      },
+    });
+
+    let totalUnread = 0;
+
+    // For each conversation, count unread messages
+    for (const participation of userParticipations) {
+      const unreadCount = await prisma.message.count({
+        where: {
+          conversationId: participation.conversationId,
+          senderId: { not: currentUserId },
+          createdAt: { gt: participation.lastReadAt },
+        },
+      });
+      totalUnread += unreadCount;
+    }
+
+    return totalUnread;
+  } catch (error) {
+    console.error("Error counting unread messages:", error);
+    return 0;
   }
 }

@@ -35,6 +35,18 @@ export async function getNotifications() {
             createdAt: true,
           },
         },
+        message: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            conversation: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
