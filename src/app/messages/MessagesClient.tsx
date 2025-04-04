@@ -97,7 +97,6 @@ export default function MessagesClient({
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   useEffect(() => {
     if (selectedConversation) {
@@ -180,14 +179,7 @@ export default function MessagesClient({
     }
   };
 
-  const getOtherParticipant = (conversation: Conversation): {
-    id: string;
-    name: string | null;
-    username: string;
-    image: string | null;
-    isOnline?: boolean;
-    lastSeen?: Date;
-  } | undefined => {
+  const getOtherParticipant = (conversation: Conversation): Conversation["participants"][number]["user"] | undefined => {
     if (!conversation) return undefined;
     return conversation.participants.find(
       (p) => p.user.id !== currentUserId
