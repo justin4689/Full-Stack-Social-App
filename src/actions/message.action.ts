@@ -3,6 +3,36 @@
 import { prisma } from "@/lib/prisma";
 import { getDbUserId } from "./user.action";
 
+export type ConversationsResponse = {
+  success: boolean;
+  conversations: Array<{
+    id: string;
+    participants: Array<{
+      user: {
+        id: string;
+        name: string | null;
+        username: string;
+        image: string | null;
+        isOnline: boolean;
+        lastSeen: Date;
+      };
+    }>;
+    messages: Array<{
+      id: string;
+      content: string;
+      senderId: string;
+      createdAt: Date;
+      sender: {
+        id: string;
+        name: string | null;
+        username: string;
+        image: string | null;
+      };
+    }>;
+  }>;
+  currentUserId: string;
+};
+
 export async function createConversation(participantId: string) {
   try {
     const currentUserId = await getDbUserId();
@@ -153,7 +183,7 @@ export async function getConversations() {
       orderBy: { updatedAt: "desc" },
     });
 
-    return { success: true, conversations };
+    return { success: true, conversations, currentUserId };
   } catch (error) {
     console.error("Error fetching conversations:", error);
     return { success: false, error: "Failed to fetch conversations" };
