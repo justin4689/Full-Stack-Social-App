@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
-import { LoaderCircle, SendIcon } from "lucide-react";
+import { ArrowLeft, LoaderCircle, SendIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { OnlineStatus } from "@/components/online-status";
@@ -193,9 +193,27 @@ export default function MessagesClient({
 
   return (
     <div className="container max-w-6xl py-6">
-      <div className="grid grid-cols-12 gap-6">
-        {/* Conversations List */}
-        <Card className="col-span-4 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {/* Mobile Header - Only show when conversation is selected on mobile */}
+        <div className="md:hidden">
+          {selectedConversation && (
+            <Card className="p-4 mb-4">
+              <button 
+                onClick={() => setSelectedConversation(null)} 
+                className="flex items-center gap-2 text-muted-foreground mb-2"
+              >
+                <ArrowLeft className="size-4" />
+                <span>Back to conversations</span>
+              </button>
+              {(() => {
+                const otherUser = getOtherParticipant(selectedConversation);
+                return otherUser ? <MessageHeader otherUser={otherUser} /> : null;
+              })()}
+            </Card>
+          )}
+        </div>
+        {/* Conversations List - Hide on mobile when conversation is selected */}
+        <Card className={`md:col-span-4 p-4 ${selectedConversation ? 'hidden md:block' : ''}`}>
           <h2 className="font-semibold mb-4">Messages</h2>
           <ScrollArea className="h-[calc(100vh-12rem)]">
             <div className="space-y-4">
@@ -249,17 +267,20 @@ export default function MessagesClient({
         </Card>
 
         {/* Messages Area */}
-        <Card className="col-span-8 p-4">
+        <Card className={`md:col-span-8 p-4 ${!selectedConversation ? 'hidden md:block' : ''}`}>
           {!selectedConversation ? (
             <div className="h-[calc(100vh-12rem)] flex items-center justify-center">
               <p className="text-muted-foreground">Select a conversation to start messaging</p>
             </div>
           ) : (
             <div className="h-[calc(100vh-12rem)] flex flex-col">
-              {(() => {
-                const otherUser = getOtherParticipant(selectedConversation);
-                return otherUser ? <MessageHeader otherUser={otherUser} /> : null;
-              })()}
+              {/* Desktop Header */}
+              <div className="hidden md:block">
+                {(() => {
+                  const otherUser = getOtherParticipant(selectedConversation);
+                  return otherUser ? <MessageHeader otherUser={otherUser} /> : null;
+                })()}
+              </div>
 
               <ScrollArea className="flex-1 pr-4" style={{ maxHeight: 'calc(100vh - 16rem)' }}>
                 <div className="space-y-4 min-h-full">

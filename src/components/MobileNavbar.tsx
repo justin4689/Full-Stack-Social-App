@@ -5,6 +5,7 @@ import {
   HomeIcon,
   LogOutIcon,
   MenuIcon,
+  MessageSquareIcon,
   MoonIcon,
   SunIcon,
   UserIcon,
@@ -64,6 +65,12 @@ function MobileNavbar() {
                   <Link href="/profile">
                     <UserIcon className="w-4 h-4" />
                     Profile
+                  </Link>
+                </Button>
+                <Button variant="ghost" className="flex items-center gap-3 justify-start" asChild>
+                  <Link href="/messages">
+                    <MessageSquareIcon className="w-4 h-4" />
+                    Messages
                   </Link>
                 </Button>
                 <SignOutButton>

@@ -111,37 +111,34 @@ function ProfilePageClient({
   const formattedDate = format(new Date(user.createdAt), "MMMM yyyy");
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="container max-w-3xl mx-auto px-4 py-6">
       <div className="grid grid-cols-1 gap-6">
-        <div className="w-full max-w-lg mx-auto">
-          <Card className="bg-card">
-            <CardContent className="pt-6">
-              <div className="flex flex-col items-center text-center">
-                <div className="relative">
-                  <Avatar className="w-24 h-24">
-                    <AvatarImage src={user.image ?? "/avatar.png"} />
-                  </Avatar>
-                  <div className="absolute bottom-0 right-0 transform translate-x-1/4">
-                    <OnlineStatus userId={user.id} />
-                  </div>
+        <Card className="w-full">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center text-center">
+              <div className="relative">
+                <Avatar className="w-24 h-24">
+                  <AvatarImage src={user.image ?? "/avatar.png"} />
+                </Avatar>
+                <div className="absolute bottom-0 right-0 transform translate-x-1/4">
+                  <OnlineStatus userId={user.id} />
                 </div>
-                <h1 className="mt-4 text-2xl font-bold">{user.name ?? user.username}</h1>
-                <p className="text-muted-foreground">@{user.username}</p>
-                <p className="mt-2 text-sm">{user.bio}</p>
+              </div>
+              <h1 className="mt-4 text-2xl font-bold">{user.name ?? user.username}</h1>
+              <p className="text-muted-foreground">@{user.username}</p>
+              <p className="mt-2 text-sm max-w-md">{user.bio}</p>
 
                 {/* PROFILE STATS */}
-                <div className="w-full mt-6">
-                  <div className="flex justify-between mb-4">
+                <div className="w-full mt-6 max-w-sm mx-auto">
+                  <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
                       <div className="font-semibold">{user._count.following.toLocaleString()}</div>
                       <div className="text-sm text-muted-foreground">Following</div>
                     </div>
-                    <Separator orientation="vertical" />
                     <div>
                       <div className="font-semibold">{user._count.followers.toLocaleString()}</div>
                       <div className="text-sm text-muted-foreground">Followers</div>
                     </div>
-                    <Separator orientation="vertical" />
                     <div>
                       <div className="font-semibold">{user._count.posts.toLocaleString()}</div>
                       <div className="text-sm text-muted-foreground">Posts</div>
@@ -150,7 +147,7 @@ function ProfilePageClient({
                 </div>
 
                 {/* "FOLLOW & EDIT PROFILE" BUTTONS */}
-                <div className="flex gap-3 mt-4">
+                <div className="flex flex-col sm:flex-row gap-2 mt-4 w-full max-w-sm mx-auto">
                   {isOwnProfile ? (
                     <Button
                       onClick={() => setShowEditDialog(true)}
@@ -161,7 +158,7 @@ function ProfilePageClient({
                       Edit Profile
                     </Button>
                   ) : currentUser ? (
-                    <div className="">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         onClick={handleFollow}
                         variant={isFollowing ? "outline" : "default"}
@@ -173,7 +170,7 @@ function ProfilePageClient({
                       <Button
                         onClick={handleStartConversation}
                         variant="outline"
-                        className="w-full mt-2"
+                        className="w-full"
                       >
                         <MessageSquareIcon className="w-4 h-4 mr-2" />
                         Message
@@ -221,28 +218,20 @@ function ProfilePageClient({
           </Card>
         </div>
 
-        <Tabs defaultValue="posts" className="w-full">
-          <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
-            <TabsTrigger
-              value="posts"
-              className="flex items-center gap-2 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary
-               data-[state=active]:bg-transparent px-6 font-semibold"
-            >
-              <FileTextIcon className="size-4" />
-              Posts
+        <Tabs defaultValue="posts" className="w-full mt-6">
+          <TabsList className="w-full grid grid-cols-2 gap-4">
+            <TabsTrigger value="posts" className="flex items-center justify-center gap-2">
+              <FileTextIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">Posts</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="likes"
-              className="flex items-center gap-2 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary
-               data-[state=active]:bg-transparent px-6 font-semibold"
-            >
-              <HeartIcon className="size-4" />
-              Likes
+            <TabsTrigger value="likes" className="flex items-center justify-center gap-2">
+              <HeartIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">Likes</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="posts" className="mt-6">
-            <div className="space-y-6">
+          <TabsContent value="posts" className="mt-4">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {posts.length > 0 ? (
                 posts.map((post) => <PostCard key={post.id} post={post} dbUserId={user.id} />)
               ) : (
@@ -251,8 +240,8 @@ function ProfilePageClient({
             </div>
           </TabsContent>
 
-          <TabsContent value="likes" className="mt-6">
-            <div className="space-y-6">
+          <TabsContent value="likes" className="mt-4">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {likedPosts.length > 0 ? (
                 likedPosts.map((post) => <PostCard key={post.id} post={post} dbUserId={user.id} />)
               ) : (
@@ -315,7 +304,7 @@ function ProfilePageClient({
           </DialogContent>
         </Dialog>
       </div>
-    </div>
-  );
+    );
 }
+
 export default ProfilePageClient;
