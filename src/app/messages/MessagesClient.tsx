@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
-import { SendIcon } from "lucide-react";
+import { LoaderCircle, SendIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { OnlineStatus } from "@/components/online-status";
@@ -129,7 +129,12 @@ export default function MessagesClient({
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      const scrollArea = messagesEndRef.current.closest('[role="presentation"]');
+      if (scrollArea) {
+        scrollArea.scrollTop = scrollArea.scrollHeight;
+      }
+    }
   };
 
   const loadMessages = async (conversationId: string) => {
@@ -256,16 +261,22 @@ export default function MessagesClient({
                 return otherUser ? <MessageHeader otherUser={otherUser} /> : null;
               })()}
 
-              <ScrollArea className="flex-1 pr-4">
-                <div className="space-y-4">
-                  {messages.map((message) => (
-                    <MessageBubble
-                      key={message.id}
-                      message={message}
-                      isCurrentUser={message.sender.id === currentUserId}
-                    />
-                  ))}
-                  <div ref={messagesEndRef} />
+              <ScrollArea className="flex-1 pr-4" style={{ maxHeight: 'calc(100vh - 16rem)' }}>
+                <div className="space-y-4 min-h-full">
+                  {messages.length === 0 ? (
+                    <div className="h-full flex items-center justify-center">
+                      <p className="text-muted-foreground">No messages yet</p>
+                    </div>
+                  ) : (
+                    messages.map((message) => (
+                      <MessageBubble
+                        key={message.id}
+                        message={message}
+                        isCurrentUser={message.sender.id === currentUserId}
+                      />
+                    ))
+                  )}
+                  <div ref={messagesEndRef} className="h-4" />
                 </div>
               </ScrollArea>
 
@@ -277,7 +288,7 @@ export default function MessagesClient({
                   className="flex-1"
                 />
                 <Button type="submit" disabled={!newMessage.trim() || isSending}>
-                  <SendIcon className="size-4" />
+                  {isSending ? <LoaderCircle className="size-4 animate-spin" /> : <SendIcon className="size-4" />}
                 </Button>
               </form>
             </div>
