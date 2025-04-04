@@ -23,6 +23,8 @@ model User {
   image String?
   location String?
   website String?
+  isOnline Boolean @default(false)
+  lastSeen DateTime @default(now())
   createdAt DateTime @default(now()) // member since 2020
   updatedAt DateTime @updatedAt
 
@@ -30,6 +32,7 @@ model User {
   posts Post[] // One-to-many
   comments Comment[] // One-to-many
   likes Like[] // One-to-many
+  reactions Reaction[] // One-to-many
 
   followers Follows[] @relation("following") // users who follow this user
   following Follows[] @relation("follower") // users this user follows
@@ -51,6 +54,7 @@ model Post{
   author User @relation(fields: [authorId],references: [id], onDelete: Cascade) // cascade delete means delete all posts if author is deleted
   comments Comment[]
   likes Like[]
+  reactions Reaction[]
   notifications Notification[]
 }
 
@@ -95,6 +99,20 @@ model Follows{
 
   @@index([followerId,followingId]) // composite index for faster queries
   @@id([followerId, followingId]) // composite primary key prevents duplicate follows
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  type      String   // like, love, haha, wow, sad, angry
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  // Relations
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
 }
 
 model Notification {

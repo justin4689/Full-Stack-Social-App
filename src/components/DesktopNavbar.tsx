@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 import{ ModeToggle} from "@/components/ModeToggle";
 import { currentUser } from "@clerk/nextjs/server";
+import { OnlineStatus } from "./online-status";
 
 async function DesktopNavbar() {
   const user = await currentUser();
@@ -38,6 +39,7 @@ async function DesktopNavbar() {
             </Link>
           </Button>
           <UserButton />
+          
         </>
       ) : (
         <SignInButton mode="modal">

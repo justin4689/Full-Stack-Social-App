@@ -61,10 +61,17 @@ export async function getPosts() {
             userId: true,
           },
         },
+        reactions: {
+          select: {
+            type: true,
+            userId: true,
+          },
+        },
         _count: {
           select: {
             likes: true,
             comments: true,
+            reactions: true,
           },
         },
       },

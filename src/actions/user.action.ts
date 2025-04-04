@@ -49,6 +49,19 @@ export async function getUserByClerkId(clerkId: string) {
           posts: true,
         },
       },
+      following: {
+        select: {
+          followingId: true,
+          following: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+            },
+          },
+        },
+      },
     },
   });
 }

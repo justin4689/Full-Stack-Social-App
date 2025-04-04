@@ -70,10 +70,12 @@ export async function getUserPosts(userId: string) {
             userId: true,
           },
         },
+        reactions: true,
         _count: {
           select: {
             likes: true,
             comments: true,
+            reactions: true,
           },
         },
       },
@@ -128,10 +130,12 @@ export async function getUserLikedPosts(userId: string) {
             userId: true,
           },
         },
+        reactions: true,
         _count: {
           select: {
             likes: true,
             comments: true,
+            reactions: true,
           },
         },
       },

@@ -1,6 +1,7 @@
 "use client";
 
 import { createComment, deletePost, getPosts, toggleLike } from "@/actions/post.action";
+import { toggleReaction } from "@/actions/reaction.action";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -12,6 +13,7 @@ import { DeleteAlertDialog } from "./DeleteAlertDialog";
 import { Button } from "./ui/button";
 import { HeartIcon, LogInIcon, MessageCircleIcon, SendIcon } from "lucide-react";
 import { Textarea } from "./ui/textarea";
+import { ReactionPicker, type ReactionType } from "./ReactionPicker";
 
 type Posts = Awaited<ReturnType<typeof getPosts>>;
 type Post = Posts[number];
@@ -25,6 +27,22 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
   const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === dbUserId));
   const [optimisticLikes, setOptmisticLikes] = useState(post._count.likes);
   const [showComments, setShowComments] = useState(false);
+  const [currentReaction, setCurrentReaction] = useState<ReactionType | undefined>(
+    post.reactions?.find((r) => r.userId === dbUserId)?.type as ReactionType
+  );
+
+  const handleReaction = async (reactionType: ReactionType) => {
+    if (!dbUserId) return;
+
+    const prevReaction = currentReaction;
+    setCurrentReaction(prevReaction === reactionType ? undefined : reactionType);
+
+    const result = await toggleReaction(post.id, reactionType);
+    if (!result.success) {
+      setCurrentReaction(prevReaction);
+      toast.error("Failed to update reaction");
+    }
+  };
 
   const handleLike = async () => {
     if (isLiking) return;

@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { OnlineStatus } from "@/components/online-status";
 
 type User = Awaited<ReturnType<typeof getProfileByUsername>>;
 type Posts = Awaited<ReturnType<typeof getUserPosts>>;
@@ -99,9 +100,14 @@ function ProfilePageClient({
           <Card className="bg-card">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
-                <Avatar className="w-24 h-24">
-                  <AvatarImage src={user.image ?? "/avatar.png"} />
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="w-24 h-24">
+                    <AvatarImage src={user.image ?? "/avatar.png"} />
+                  </Avatar>
+                  <div className="absolute bottom-0 right-0 transform translate-x-1/4">
+                    <OnlineStatus userId={user.id} />
+                  </div>
+                </div>
                 <h1 className="mt-4 text-2xl font-bold">{user.name ?? user.username}</h1>
                 <p className="text-muted-foreground">@{user.username}</p>
                 <p className="mt-2 text-sm">{user.bio}</p>

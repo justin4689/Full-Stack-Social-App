@@ -6,7 +6,8 @@ import { getUserByClerkId } from "@/actions/user.action";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
-import { LinkIcon, MapPinIcon } from "lucide-react";
+import { LinkIcon, MapPinIcon, Users2Icon } from "lucide-react";
+import { OnlineStatus } from "./online-status";
 
 async function Sidebar() {
   const authUser = await currentUser();
@@ -24,9 +25,11 @@ async function Sidebar() {
               href={`/profile/${user.username}`}
               className="flex flex-col items-center justify-center"
             >
-              <Avatar className="w-20 h-20 border-2 ">
+              <Avatar className="w-20 h-20 border-2 relative">
                 <AvatarImage src={user.image || "/avatar.png"} />
+                <OnlineStatus userId={user.id} />
               </Avatar>
+            
 
               <div className="mt-4 space-y-1">
                 <h3 className="font-semibold">{user.name}</h3>
@@ -68,6 +71,36 @@ async function Sidebar() {
                 )}
               </div>
             </div>
+
+            {/* Section des amis en ligne */}
+            {user._count.following > 0 && (
+              <div className="w-full mt-4">
+                <Separator className="my-4" />
+                <div className="flex items-center gap-2 mb-3">
+                  <Users2Icon className="w-4 h-4" />
+                  <h4 className="font-medium">Amis en ligne</h4>
+                </div>
+                <div className="space-y-3">
+                  {user.following.map((follow) => (
+                    <Link
+                      key={follow.followingId}
+                      href={`/profile/${follow.following.username}`}
+                      className="flex items-center gap-2 hover:bg-accent p-2 rounded-lg"
+                    >
+                      <div className="relative">
+                        <Avatar className="w-8 h-8">
+                          <AvatarImage src={follow.following.image || "/avatar.png"} />
+                        </Avatar>
+                        <div className="absolute -bottom-1 -right-1 transform scale-75">
+                          <OnlineStatus userId={follow.followingId} showLastSeen={false} />
+                        </div>
+                      </div>
+                      <span className="text-sm">{follow.following.name || follow.following.username}</span>
+                    </Link>
+                  ))
+                }</div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

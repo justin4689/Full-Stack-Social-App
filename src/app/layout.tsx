@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import NavBar from "@/components/NavBar";
 import SideBar from "@/components/SideBar";
 import { Toaster } from "react-hot-toast";
-
+import { OnlineStatusHandler } from "@/components/online-status-handler";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +43,7 @@ export default function RootLayout({
             <div className="min-h-screen">
               <NavBar />
               <main className="py-8">
+                <OnlineStatusHandler />
                 <div className="max-w-7xl mx-auto px-4 ">
                   <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <div className="hidden lg:block lg:col-span-3">
