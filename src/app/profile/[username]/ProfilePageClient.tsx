@@ -2,6 +2,7 @@
 
 import { getProfileByUsername, getUserPosts, updateProfile } from "@/actions/profile.action";
 import { toggleFollow } from "@/actions/user.action";
+import { createConversation } from "@/actions/message.action";
 import PostCard from "@/components/PostCard";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ import {
   HeartIcon,
   LinkIcon,
   MapPinIcon,
+  MessageSquareIcon,
 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -87,6 +89,21 @@ function ProfilePageClient({
     }
   };
 
+  const handleStartConversation = async () => {
+    if (!currentUser) return;
+    
+    try {
+      const result = await createConversation(user.id);
+      if (result.success) {
+        window.location.href = "/messages";
+      } else {
+        toast.error("Failed to start conversation");
+      }
+    } catch (error) {
+      toast.error("Failed to start conversation");
+    }
+  };
+
   const isOwnProfile =
     currentUser?.username === user.username ||
     currentUser?.emailAddresses[0].emailAddress.split("@")[0] === user.username;
@@ -133,25 +150,43 @@ function ProfilePageClient({
                 </div>
 
                 {/* "FOLLOW & EDIT PROFILE" BUTTONS */}
-                {!currentUser ? (
-                  <SignInButton mode="modal">
-                    <Button className="w-full mt-4">Follow</Button>
-                  </SignInButton>
-                ) : isOwnProfile ? (
-                  <Button className="w-full mt-4" onClick={() => setShowEditDialog(true)}>
-                    <EditIcon className="size-4 mr-2" />
-                    Edit Profile
-                  </Button>
-                ) : (
-                  <Button
-                    className="w-full mt-4"
-                    onClick={handleFollow}
-                    disabled={isUpdatingFollow}
-                    variant={isFollowing ? "outline" : "default"}
-                  >
-                    {isFollowing ? "Unfollow" : "Follow"}
-                  </Button>
-                )}
+                <div className="flex gap-3 mt-4">
+                  {isOwnProfile ? (
+                    <Button
+                      onClick={() => setShowEditDialog(true)}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <EditIcon className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                  ) : currentUser ? (
+                    <>
+                      <Button
+                        onClick={handleFollow}
+                        variant={isFollowing ? "outline" : "default"}
+                        className="w-full"
+                        disabled={isUpdatingFollow}
+                      >
+                        {isFollowing ? "Unfollow" : "Follow"}
+                      </Button>
+                      <Button
+                        onClick={handleStartConversation}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        <MessageSquareIcon className="w-4 h-4 mr-2" />
+                        Message
+                      </Button>
+                    </>
+                  ) : (
+                    <SignInButton mode="modal">
+                      <Button className="w-full">
+                        Follow
+                      </Button>
+                    </SignInButton>
+                  )}
+                </div>
 
                 {/* LOCATION & WEBSITE */}
                 <div className="w-full mt-6 space-y-2 text-sm">
