@@ -70,9 +70,9 @@ function CreatePost() {
       setContent("");
       removeImage();
       toast.success("Post created successfully");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error:", error);
-      toast.error(error.message || "Failed to create post");
+      toast.error("Failed to create post");
     } finally {
       setIsPosting(false);
     }

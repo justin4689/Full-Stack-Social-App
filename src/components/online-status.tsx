@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getUserOnlineStatus, updateOnlineStatus } from "@/actions/online-status.action";
+import { getUserOnlineStatus} from "@/actions/online-status.action";
 
 interface OnlineStatusProps {
   userId: string;

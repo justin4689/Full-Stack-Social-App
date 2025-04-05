@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, HomeIcon, Menu, MessageSquareIcon, UserIcon } from "lucide-react";
+import { BellIcon, HomeIcon,  MessageSquareIcon, UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
@@ -8,11 +8,11 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { getNotifications } from "@/actions/notification.action";
 import { getUnreadMessagesCount } from "@/actions/message.action";
 import { useEffect, useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+// import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 function DesktopNavbar() {
   const { user } = useUser();
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
 

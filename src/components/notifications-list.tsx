@@ -3,8 +3,8 @@
 import { getNotifications, markNotificationsAsRead } from "@/actions/notification.action";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
-import { formatDistanceToNow } from "date-fns";
-import Link from "next/link";
+import { formatTimeToNow } from "@/lib/format-date";
+// import Link from "next/link";
 import { NotificationType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
@@ -105,7 +105,7 @@ export function NotificationsList() {
                 </p>
               )}
               <p className="text-xs text-muted-foreground">
-                {formatDistanceToNow(new Date(notification.createdAt))} ago
+                {formatTimeToNow(notification.createdAt)}
               </p>
             </div>
           </div>

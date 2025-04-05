@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { formatDistanceToNow } from "date-fns";
+import { formatTimeToNow } from "@/lib/format-date";
 import { ArrowLeft, LoaderCircle, SendIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { OnlineStatus } from "@/components/online-status";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 type Conversation = {
   id: string;
@@ -81,7 +81,7 @@ const MessageBubble = ({ message, isCurrentUser }: { message: Message; isCurrent
             : "text-muted-foreground"
         }`}
       >
-        {formatDistanceToNow(new Date(message.createdAt))} ago
+        {formatTimeToNow(message.createdAt)}
       </p>
     </div>
   </div>
@@ -253,7 +253,7 @@ export default function MessagesClient({
                               {lastMessage.content}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {formatDistanceToNow(new Date(lastMessage.createdAt))} ago
+                              {formatTimeToNow(lastMessage.createdAt)}
                             </p>
                           </>
                         )}

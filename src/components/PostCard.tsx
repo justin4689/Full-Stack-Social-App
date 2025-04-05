@@ -1,19 +1,20 @@
 "use client";
 
 import { createComment, deletePost, getPosts, toggleLike } from "@/actions/post.action";
-import { toggleReaction } from "@/actions/reaction.action";
+// import { toggleReaction } from "@/actions/reaction.action";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Card, CardContent } from "./ui/card";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
-import { formatDistanceToNow } from "date-fns";
+import { formatTimeToNow } from "@/lib/format-date";
 import { DeleteAlertDialog } from "./DeleteAlertDialog";
 import { Button } from "./ui/button";
 import { HeartIcon, LogInIcon, MessageCircleIcon, SendIcon } from "lucide-react";
 import { Textarea } from "./ui/textarea";
-import { ReactionPicker, type ReactionType } from "./ReactionPicker";
+// import { type ReactionType } from "./ReactionPicker";
+import Image from "next/image";
 
 type Posts = Awaited<ReturnType<typeof getPosts>>;
 type Post = Posts[number];
@@ -27,22 +28,22 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
   const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === dbUserId));
   const [optimisticLikes, setOptmisticLikes] = useState(post._count.likes);
   const [showComments, setShowComments] = useState(false);
-  const [currentReaction, setCurrentReaction] = useState<ReactionType | undefined>(
-    post.reactions?.find((r) => r.userId === dbUserId)?.type as ReactionType
-  );
+  // const [currentReaction, setCurrentReaction] = useState<ReactionType | undefined>(
+  //   post.reactions?.find((r) => r.userId === dbUserId)?.type as ReactionType
+  // );
 
-  const handleReaction = async (reactionType: ReactionType) => {
-    if (!dbUserId) return;
+  // const handleReaction = async (reactionType: ReactionType) => {
+  //   if (!dbUserId) return;
 
-    const prevReaction = currentReaction;
-    setCurrentReaction(prevReaction === reactionType ? undefined : reactionType);
+  //   const prevReaction = currentReaction;
+  //   setCurrentReaction(prevReaction === reactionType ? undefined : reactionType);
 
-    const result = await toggleReaction(post.id, reactionType);
-    if (!result.success) {
-      setCurrentReaction(prevReaction);
-      toast.error("Failed to update reaction");
-    }
-  };
+  //   const result = await toggleReaction(post.id, reactionType);
+  //   if (!result.success) {
+  //     setCurrentReaction(prevReaction);
+  //     toast.error("Failed to update reaction");
+  //   }
+  // };
 
   const handleLike = async () => {
     if (isLiking) return;
@@ -54,6 +55,8 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
     } catch (error) {
       setOptmisticLikes(post._count.likes);
       setHasLiked(post.likes.some((like) => like.userId === dbUserId));
+      console.error(error);
+      
     } finally {
       setIsLiking(false);
     }
@@ -69,6 +72,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
         setNewComment("");
       }
     } catch (error) {
+      console.error(error);
       toast.error("Failed to add comment");
     } finally {
       setIsCommenting(false);
@@ -83,6 +87,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
       if (result.success) toast.success("Post deleted successfully");
       else throw new Error(result.error);
     } catch (error) {
+      console.error(error);
       toast.error("Failed to delete post");
     } finally {
       setIsDeleting(false);
@@ -113,7 +118,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <Link href={`/profile/${post.author.username}`}>@{post.author.username}</Link>
                     <span>•</span>
-                    <span>{formatDistanceToNow(new Date(post.createdAt))} ago</span>
+                    <span>{formatTimeToNow(post.createdAt)}</span>
                   </div>
                 </div>
                 {/* Check if current user is the post author */}
@@ -128,7 +133,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
           {/* POST IMAGE */}
           {post.image && (
             <div className="rounded-lg overflow-hidden">
-              <img src={post.image} alt="Post content" className="w-full h-auto object-cover" />
+              <Image src={post.image} alt="Post content" className="w-full h-auto object-cover" />
             </div>
           )}
 
@@ -190,7 +195,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
                         </span>
                         <span className="text-sm text-muted-foreground">·</span>
                         <span className="text-sm text-muted-foreground">
-                          {formatDistanceToNow(new Date(comment.createdAt))} ago
+                          {formatTimeToNow(comment.createdAt)}
                         </span>
                       </div>
                       <p className="text-sm break-words">{comment.content}</p>

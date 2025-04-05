@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { SignInButton, useUser } from "@clerk/nextjs";
@@ -83,6 +83,7 @@ function ProfilePageClient({
       await toggleFollow(user.id);
       setIsFollowing(!isFollowing);
     } catch (error) {
+      console.error(error)
       toast.error("Failed to update follow status");
     } finally {
       setIsUpdatingFollow(false);
@@ -100,6 +101,7 @@ function ProfilePageClient({
         toast.error("Failed to start conversation");
       }
     } catch (error) {
+      console.error(error)
       toast.error("Failed to start conversation");
     }
   };
