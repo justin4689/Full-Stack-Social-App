@@ -163,6 +163,7 @@ export async function createComment(postId: string, content: string) {
     if (!post) throw new Error("Post not found");
 
     // Create comment and notification in a transaction
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [comment] = await prisma.$transaction(async (tx: any) => {
       // Create comment first
       const newComment = await tx.comment.create({
