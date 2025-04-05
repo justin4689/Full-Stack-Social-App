@@ -1,4 +1,4 @@
-import { ProfilePage } from "./ProfilePage";
+import ProfilePage from "./ProfilePage";
 
 interface PageProps {
   params: Promise<{ username: string }>;

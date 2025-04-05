@@ -1,5 +1,3 @@
-"use client";
-
 import { getProfileByUsername, getUserLikedPosts, getUserPosts, isFollowing } from "@/actions/profile.action";
 import { notFound } from "next/navigation";
 import ProfilePageClient from "./ProfilePageClient";
@@ -8,7 +6,7 @@ interface ProfilePageProps {
   username: string;
 }
 
-export async function ProfilePage({ username }: ProfilePageProps) {
+export default async function ProfilePage({ username }: ProfilePageProps) {
   const user = await getProfileByUsername(username);
   if (!user) notFound();
 

@@ -15,6 +15,7 @@ function DesktopNavbar() {
   // const [isOpen, setIsOpen] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
+  console.log(user);
 
   useEffect(() => {
     const loadCounts = async () => {
@@ -72,7 +73,7 @@ function DesktopNavbar() {
           </Button>
 
           <Button variant="ghost" className="flex items-center gap-2" asChild>
-            <Link href={`/profile/${user.username}`}>
+            <Link href={`/profile/${user?.username}`}>
               <UserIcon className="w-4 h-4" />
               <span className="hidden lg:inline">Profile</span>
             </Link>
