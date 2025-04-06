@@ -235,7 +235,7 @@ function ProfilePageClient({
           <TabsContent value="posts" className="mt-4">
             <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {posts.length > 0 ? (
-                posts.map((post) => <PostCard key={post.id} post={post} dbUserId={user.id} />)
+                posts.map((post) => <PostCard key={post.id} post={post} dbUserId={currentUser?.id ?? null} />)
               ) : (
                 <div className="text-center py-8 text-muted-foreground">No posts yet</div>
               )}
@@ -245,7 +245,7 @@ function ProfilePageClient({
           <TabsContent value="likes" className="mt-4">
             <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {likedPosts.length > 0 ? (
-                likedPosts.map((post) => <PostCard key={post.id} post={post} dbUserId={user.id} />)
+                likedPosts.map((post) => <PostCard key={post.id} post={post} dbUserId={currentUser?.id ?? null} />)
               ) : (
                 <div className="text-center py-8 text-muted-foreground">No liked posts to show</div>
               )}

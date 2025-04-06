@@ -19,7 +19,7 @@ import Image from "next/image";
 type Posts = Awaited<ReturnType<typeof getPosts>>;
 type Post = Posts[number];
 
-function PostCard({ post, dbUserId=null }: { post: Post; dbUserId: string | null }) {
+function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
   const { user } = useUser();
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
@@ -115,15 +115,17 @@ function PostCard({ post, dbUserId=null }: { post: Post; dbUserId: string | null
                   >
                     {post.author.name}
                   </Link>
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Link href={`/profile/${post.author.username}`}>@{post.author.username}</Link>
-                    <span>•</span>
+                  <div className="flex items-center space-x-2 text-muted-foreground text-sm">
+                    <span>@{post.author.username}</span>
+                    <span>·</span>
                     <span>{formatTimeToNow(post.createdAt)}</span>
                   </div>
                 </div>
-                {/* Check if current user is the post author */}
-                {dbUserId === post.author.id && (
-                  <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
+                {dbUserId && post.authorId === dbUserId && (
+                  <DeleteAlertDialog
+                    isDeleting={isDeleting}
+                    onDelete={handleDeletePost}
+                  />
                 )}
               </div>
               <p className="mt-2 text-sm text-foreground break-words">{post.content}</p>
