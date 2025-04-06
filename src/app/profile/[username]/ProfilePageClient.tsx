@@ -1,8 +1,9 @@
 "use client";
 
 import { getProfileByUsername, getUserPosts, updateProfile } from "@/actions/profile.action";
-import { toggleFollow } from "@/actions/user.action";
+import { toggleFollow, getUserByClerkId } from "@/actions/user.action";
 import { createConversation } from "@/actions/message.action";
+import { useEffect } from "react";
 import PostCard from "@/components/PostCard";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,17 @@ function ProfilePageClient({
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isUpdatingFollow, setIsUpdatingFollow] = useState(false);
+  const [currentDbUser, setCurrentDbUser] = useState<{ id: string } | null>(null);
+
+  useEffect(() => {
+    const loadCurrentUser = async () => {
+      if (currentUser?.id) {
+        const dbUser = await getUserByClerkId(currentUser.id);
+        setCurrentDbUser(dbUser);
+      }
+    };
+    loadCurrentUser();
+  }, [currentUser?.id]);
 
   const [editForm, setEditForm] = useState({
     name: user.name || "",
@@ -235,7 +247,7 @@ function ProfilePageClient({
           <TabsContent value="posts" className="mt-4">
             <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {posts.length > 0 ? (
-                posts.map((post) => <PostCard key={post.id} post={post} dbUserId={currentUser?.id ?? null} />)
+                posts.map((post) => <PostCard key={post.id} post={post} dbUserId={currentDbUser?.id ?? null} />)
               ) : (
                 <div className="text-center py-8 text-muted-foreground">No posts yet</div>
               )}
@@ -245,7 +257,7 @@ function ProfilePageClient({
           <TabsContent value="likes" className="mt-4">
             <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {likedPosts.length > 0 ? (
-                likedPosts.map((post) => <PostCard key={post.id} post={post} dbUserId={currentUser?.id ?? null} />)
+                likedPosts.map((post) => <PostCard key={post.id} post={post} dbUserId={currentDbUser?.id ?? null} />)
               ) : (
                 <div className="text-center py-8 text-muted-foreground">No liked posts to show</div>
               )}
