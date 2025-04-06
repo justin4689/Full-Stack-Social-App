@@ -240,7 +240,7 @@ export default function MessagesClient({
                           <AvatarImage src={otherUser.image ?? "/avatar.png"} />
                         </Avatar>
                         <div className="absolute bottom-0 right-0 transform translate-x-1/4">
-                          <OnlineStatus userId={otherUser.id} />
+                          <OnlineStatus userId={otherUser.id} showLastSeen={false} />
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">

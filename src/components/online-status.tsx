@@ -42,13 +42,13 @@ export function OnlineStatus({ userId, showLastSeen = true }: OnlineStatusProps)
   return (
     <div className="flex items-center gap-2">
       <div
-        className={`w-2 h-2 rounded-full ${
+        className={`w-2 h-2 rounded-full  relative ${
           isOnline ? "bg-green-500" : "bg-gray-400"
         }`}
       />
       {showLastSeen && lastSeen && !isOnline && (
-        <span className="text-sm text-gray-500">
-          Vu {formatLastSeen(lastSeen)}
+        <span className="text-sm text-gray-500 text-nowrap absolute left-10 top-0.5">
+          En ligne {formatLastSeen(lastSeen)}
         </span>
       )}
     </div>

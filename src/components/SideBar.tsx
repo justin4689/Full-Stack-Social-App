@@ -27,7 +27,7 @@ async function Sidebar() {
             >
               <Avatar className="w-20 h-20 border-2 relative">
                 <AvatarImage src={user.image || "/avatar.png"} />
-                <OnlineStatus userId={user.id} />
+                {/* <OnlineStatus userId={user.id} /> */}
               </Avatar>
             
 
