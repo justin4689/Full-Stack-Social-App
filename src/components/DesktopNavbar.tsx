@@ -7,15 +7,26 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { ModeToggle } from "@/components/ModeToggle";
 import { getNotifications } from "@/actions/notification.action";
 import { getUnreadMessagesCount } from "@/actions/message.action";
+import { getUserByClerkId } from "@/actions/user.action";
 import { useEffect, useState } from "react";
 // import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 function DesktopNavbar() {
-  const { user } = useUser();
+  const { user: clerkUser } = useUser();
   // const [isOpen, setIsOpen] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
-  console.log(user);
+  const [dbUser, setDbUser] = useState<any>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      if (clerkUser?.id) {
+        const user = await getUserByClerkId(clerkUser.id);
+        setDbUser(user);
+      }
+    };
+    loadUser();
+  }, [clerkUser?.id]);
 
   useEffect(() => {
     const loadCounts = async () => {
@@ -29,13 +40,13 @@ function DesktopNavbar() {
       setUnreadMessages(messageCount);
     };
 
-    if (user) {
+    if (clerkUser) {
       loadCounts();
       // Poll for updates every 30 seconds
       const interval = setInterval(loadCounts, 30000);
       return () => clearInterval(interval);
     }
-  }, [user]);
+  }, [clerkUser]);
 
   const NavItems = () => (
     <>
@@ -46,7 +57,7 @@ function DesktopNavbar() {
         </Link>
       </Button>
 
-      {user ? (
+      {clerkUser ? (
         <>
           <Button variant="ghost" className="flex items-center gap-2" asChild>
             <Link href="/notifications" className="relative">
@@ -73,7 +84,7 @@ function DesktopNavbar() {
           </Button>
 
           <Button variant="ghost" className="flex items-center gap-2" asChild>
-            <Link href={`/profile/${user?.username}`}>
+            <Link href={`/profile/${dbUser?.username}`}>
               <UserIcon className="w-4 h-4" />
               <span className="hidden lg:inline">Profile</span>
             </Link>
