@@ -5,13 +5,13 @@ import type { ConversationsResponse } from "@/actions/message.action";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatTimeToNow } from "@/lib/format-date";
 import { ArrowLeft, LoaderCircle, SendIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { OnlineStatus } from "@/components/online-status";
+import { Textarea } from "@/components/ui/textarea";
 // import { useRouter } from "next/navigation";
 
 type Conversation = {
@@ -302,11 +302,19 @@ export default function MessagesClient({
               </ScrollArea>
 
               <form onSubmit={handleSendMessage} className="flex gap-2">
-                <Input
+                <Textarea
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type a message..."
-                  className="flex-1"
+                  className="flex-1 min-h-[40px] max-h-24 resize-none overflow-y-auto py-2.5"
+                  onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      if (newMessage.trim() && !isSending) {
+                        handleSendMessage(e);
+                      }
+                    }
+                  }}
                 />
                 <Button type="submit" disabled={!newMessage.trim() || isSending}>
                   {isSending ? <LoaderCircle className="size-4 animate-spin" /> : <SendIcon className="size-4" />}
