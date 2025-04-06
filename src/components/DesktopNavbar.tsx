@@ -9,6 +9,7 @@ import { getNotifications } from "@/actions/notification.action";
 import { getUnreadMessagesCount } from "@/actions/message.action";
 import { getUserByClerkId } from "@/actions/user.action";
 import { useEffect, useState } from "react";
+import { User } from "@prisma/client";
 // import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 function DesktopNavbar() {
@@ -16,7 +17,7 @@ function DesktopNavbar() {
   // const [isOpen, setIsOpen] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
-  const [dbUser, setDbUser] = useState<any>(null);
+  const [dbUser, setDbUser] = useState<User | null>(null);
 
   useEffect(() => {
     const loadUser = async () => {

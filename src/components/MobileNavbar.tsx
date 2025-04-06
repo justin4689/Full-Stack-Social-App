@@ -17,12 +17,13 @@ import { useAuth, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { getUserByClerkId } from "@/actions/user.action";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { User } from "@prisma/client";
 
 function MobileNavbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { isSignedIn } = useAuth();
   const { user: clerkUser } = useUser();
-  const [dbUser, setDbUser] = useState<any>(null);
+  const [dbUser, setDbUser] = useState<User | null>(null);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {

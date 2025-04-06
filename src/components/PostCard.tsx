@@ -132,7 +132,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
 
           {/* POST IMAGE */}
           {post.image && (
-            <div className="relative w-full aspect-video">
+            <div className="relative w-full aspect-video rounded-lg">
               <Image 
                 src={post.image} 
                 alt="Post content" 
