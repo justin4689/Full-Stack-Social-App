@@ -106,11 +106,15 @@ function NotificationsPage() {
                           <div className="text-sm text-muted-foreground rounded-md p-2 bg-muted/30 mt-2">
                             <p>{notification.post.content}</p>
                             {notification.post.image && (
-                              <Image
-                                src={notification.post.image}
-                                alt="Post content"
-                                className="mt-2 rounded-md w-full max-w-[200px] h-auto object-cover"
-                              />
+                              <div className="relative w-24 h-24">
+                                <Image
+                                  src={notification.post.image}
+                                  alt="Post content"
+                                  className="rounded-md object-cover"
+                                  fill
+                                  sizes="96px"
+                                />
+                              </div>
                             )}
                           </div>
 

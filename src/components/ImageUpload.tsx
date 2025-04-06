@@ -31,6 +31,8 @@ function ImageUpload({ endpoint, onChange, value }: ImageUploadProps) {
           className="rounded-md object-cover"
           fill
           sizes="200px"
+          width={200}
+          height={200}
         />
         <button
           onClick={() => onChange(undefined)}
