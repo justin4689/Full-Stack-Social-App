@@ -301,7 +301,7 @@ export default function MessagesClient({
                 </div>
               </ScrollArea>
 
-              <form onSubmit={handleSendMessage} className="mt-4 flex gap-2">
+              <form onSubmit={handleSendMessage} className="flex gap-2">
                 <Input
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}

@@ -19,7 +19,7 @@ import Image from "next/image";
 type Posts = Awaited<ReturnType<typeof getPosts>>;
 type Post = Posts[number];
 
-function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
+function PostCard({ post, dbUserId=null }: { post: Post; dbUserId: string | null }) {
   const { user } = useUser();
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
