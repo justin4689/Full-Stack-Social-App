@@ -1,4 +1,4 @@
-# Socially - Full Stack Social Media Application
+# TrendLink - Full Stack Social Media Application
 
 
 ## ✨ Features
